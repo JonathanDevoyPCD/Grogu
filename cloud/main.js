@@ -1,6 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import template from '../template.json';
+import brandIconUrl from '../public/icon.svg?url';
 import '../public/styles.css';
+
+window.groguIconUrl = brandIconUrl;
+const favicon = document.createElement('link');
+favicon.rel = 'icon';
+favicon.type = 'image/svg+xml';
+favicon.href = brandIconUrl;
+document.head.append(favicon);
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;

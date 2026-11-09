@@ -4,6 +4,7 @@ const app = document.querySelector('#app');
 const dialog = document.querySelector('#dialog');
 const toast = document.querySelector('#toast');
 const state = { user: null, users: [], projects: [], project: null, items: [], view: 'dashboard', search: '' };
+const brandIcon = () => `<img class="brand-mark" src="${escapeHtml(window.groguIconUrl || '/icon.svg')}" alt="">`;
 const roleColumns = [
   ['designer', 'Designer'], ['developer', 'Developer'], ['content_admin', 'Content admin'],
   ['tester', 'Extra tester'], ['account_exec', 'Account exec']
@@ -44,7 +45,7 @@ function progress(done, total) {
 function shell(content, title) {
   app.innerHTML = `<div class="shell">
     <aside class="sidebar">
-      <div class="brand"><span class="brand-mark">✦</span><span class="brand-name">Grogu<span class="brand-dot">.</span></span></div>
+      <div class="brand">${brandIcon()}<span class="brand-name">Grogu<span class="brand-dot">.</span></span></div>
       <p class="side-label">WORKSPACE</p>
       <button class="nav-button ${state.view !== 'team' ? 'active' : ''}" data-action="dashboard"><span class="nav-icon">▦</span><span class="nav-text">Dashboard</span></button>
       <button class="nav-button ${state.view === 'team' ? 'active' : ''}" data-action="team"><span class="nav-icon">♧</span><span class="nav-text">Team members</span></button>
@@ -55,7 +56,7 @@ function shell(content, title) {
 }
 function auth(setup) {
   app.innerHTML = `<main class="auth"><div class="auth-card">
-    <div class="brand"><span class="brand-mark">✦</span><span>Grogu.</span></div>
+    <div class="brand">${brandIcon()}<span>Grogu.</span></div>
     <div class="eyebrow">${setup ? 'GET STARTED' : 'WELCOME BACK'}</div>
     <h1>${setup ? 'Set up your workspace' : 'Sign in to your workspace'}</h1>
     <p class="subtitle">${setup ? 'Create the first administrator account to get your team ready for launch.' : 'Your website launches, all in one place.'}</p>
@@ -81,7 +82,7 @@ function auth(setup) {
   });
 }
 function invitation() {
-  app.innerHTML = `<main class="auth"><div class="auth-card"><div class="brand"><span class="brand-mark">✦</span><span>Grogu.</span></div><div class="eyebrow">WELCOME TO GROGU</div><h1>Set your password</h1><p class="subtitle">Choose a password to finish accepting your invitation.</p><form><p class="form-error" role="alert"></p><label class="field"><span>New password</span><input name="password" type="password" minlength="10" maxlength="200" required autocomplete="new-password"></label><button class="button primary" type="submit">Continue</button></form></div></main>`;
+  app.innerHTML = `<main class="auth"><div class="auth-card"><div class="brand">${brandIcon()}<span>Grogu.</span></div><div class="eyebrow">WELCOME TO GROGU</div><h1>Set your password</h1><p class="subtitle">Choose a password to finish accepting your invitation.</p><form><p class="form-error" role="alert"></p><label class="field"><span>New password</span><input name="password" type="password" minlength="10" maxlength="200" required autocomplete="new-password"></label><button class="button primary" type="submit">Continue</button></form></div></main>`;
   app.querySelector('form').addEventListener('submit', async event => {
     event.preventDefault();
     const form = event.currentTarget;

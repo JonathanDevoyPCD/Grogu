@@ -35,6 +35,10 @@ test('shared checklist and account lifecycle', async t => {
     try { await fetch(base); break; } catch { await new Promise(resolve => setTimeout(resolve, 50)); }
     if (i === 99) throw new Error(`Server did not start: ${output}`);
   }
+  const favicon = await fetch(`${base}/icon.svg`);
+  assert.equal(favicon.status, 200);
+  assert.match(favicon.headers.get('content-type'), /image\/svg\+xml/);
+  assert.match(await favicon.text(), /#70cf89/i);
   async function request(url, method = 'GET', body, cookie, origin = base) {
     const response = await fetch(base + url, {
       method,
