@@ -1,0 +1,13 @@
+{
+  "name": "grogu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A shared website go-live checklist portal",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

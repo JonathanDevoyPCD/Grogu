@@ -1,0 +1,6 @@
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+node_modules/
+WEBSITE GO-LIVE CHECK-LIST.xlsx
