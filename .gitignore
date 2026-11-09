@@ -4,3 +4,9 @@ data/
 *.sqlite-wal
 node_modules/
 WEBSITE GO-LIVE CHECK-LIST.xlsx
+php/grogu-private/config.php
+dist/
+.env*
+!.env.example
+supabase/.temp/
+supabase/.branches/

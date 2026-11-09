@@ -1,0 +1,65 @@
+[
+  [
+    "General checks",
+    [
+      "Favicon implemented",
+      "Browser titles are SEO correct and unique per page",
+      "No Lorem Ipsum on site",
+      "All links working and going to the correct URL",
+      "Functional checks (no errors)",
+      "Responsive design works correctly, including social icons on mobile",
+      "Navigation works on desktop and mobile",
+      "Padding and spacing are consistent across the site",
+      "Fonts are consistent across the site",
+      "Google Maps API key is unique (if relevant)",
+      "Generate and install sitemap",
+      "Mail SMTP plugin installed and tested with own and client emails",
+      "Enquiries engine directs to a well-formatted thank you page",
+      "Call us button included on mobile",
+      "Contact phone numbers are correct",
+      "Social media links are correct and relevant",
+      "Footer copyright and collaboration credits are correct",
+      "Run PageSpeed Insights tests",
+      "Cross-browser testing: Chrome",
+      "Cross-browser testing: Firefox",
+      "Cross-browser testing: Safari",
+      "Cross-browser testing: Microsoft Edge"
+    ]
+  ],
+  [
+    "Ecommerce (if applicable)",
+    [
+      "Ecommerce and payment gateway set to live; test a purchase",
+      "Terms and conditions and privacy policy in place (if needed)",
+      "Order emails are correct and sending",
+      "Create an account process works",
+      "Login and forgot password work correctly"
+    ]
+  ],
+  [
+    "WordPress specific",
+    [
+      "Kadence, Solid Security or Wordfence Premium plugin installed",
+      "All in One SEO or Yoast SEO plugin installed",
+      "Stream plugin installed",
+      "Search engine indexing is not discouraged"
+    ]
+  ],
+  [
+    "Go-live day (if quoted; account executive to confirm)",
+    [
+      "Remove noindex code from head for coded sites",
+      "reCAPTCHA installed on all forms",
+      "Test enquiries with the client recipient email address",
+      "Google Analytics / Tag Manager installed; SSL checked",
+      "Add Simon to Analytics",
+      "For WordPress: check Elementor Pro and custom font licenses and HTTPS",
+      "For WordPress: search engine indexing is not discouraged",
+      "WordPress site backed up to NAS",
+      "Login password updated on Passbolt",
+      "Client handover and maintenance agreement / hosting package",
+      "Add project to Skywalker",
+      "If using a unique password, add it to Skywalker"
+    ]
+  ]
+]

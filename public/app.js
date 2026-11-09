@@ -18,6 +18,7 @@ const date = value => {
   return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 };
 async function api(url, options = {}) {
+  if (window.groguCloud) return window.groguCloud.api(url, options);
   const response = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...options.headers }, body: options.body ? JSON.stringify(options.body) : undefined });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Request failed.');
@@ -60,6 +61,7 @@ function auth(setup) {
     <p class="subtitle">${setup ? 'Create the first administrator account to get your team ready for launch.' : 'Your website launches, all in one place.'}</p>
     <form id="auth-form"><p class="form-error" role="alert"></p>
       ${setup ? '<label class="field"><span>Your name</span><input name="name" required maxlength="100" autocomplete="name" placeholder="e.g. Alex Morgan"></label>' : ''}
+      ${setup && state.setupKeyRequired ? '<label class="field"><span>Setup key</span><input name="setupKey" type="password" required autocomplete="off" placeholder="Enter your private setup key"></label>' : ''}
       <label class="field"><span>Email address</span><input name="email" type="email" required maxlength="254" autocomplete="username" placeholder="you@company.com"></label>
       <label class="field"><span>Password</span><input name="password" type="password" required minlength="10" maxlength="200" autocomplete="${setup ? 'new-password' : 'current-password'}" placeholder="${setup ? 'At least 10 characters' : 'Enter your password'}"></label>
       <button class="button primary" type="submit">${setup ? 'Create workspace' : 'Sign in'} <span>→</span></button>
@@ -73,6 +75,20 @@ function auth(setup) {
     try {
       const result = await api(setup ? '/api/setup' : '/api/login', { method: 'POST', body: Object.fromEntries(new FormData(form)) });
       state.user = result.user;
+      await dashboard();
+    } catch (error) { form.querySelector('.form-error').textContent = error.message; }
+    finally { button.disabled = false; }
+  });
+}
+function invitation() {
+  app.innerHTML = `<main class="auth"><div class="auth-card"><div class="brand"><span class="brand-mark">✦</span><span>Grogu.</span></div><div class="eyebrow">WELCOME TO GROGU</div><h1>Set your password</h1><p class="subtitle">Choose a password to finish accepting your invitation.</p><form><p class="form-error" role="alert"></p><label class="field"><span>New password</span><input name="password" type="password" minlength="10" maxlength="200" required autocomplete="new-password"></label><button class="button primary" type="submit">Continue</button></form></div></main>`;
+  app.querySelector('form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button');
+    button.disabled = true;
+    try {
+      state.user = await window.groguCloud.acceptInvitation(new FormData(form).get('password'));
       await dashboard();
     } catch (error) { form.querySelector('.form-error').textContent = error.message; }
     finally { button.disabled = false; }
@@ -190,6 +206,12 @@ function projectForm(p = {}) {
     });
 }
 function userForm() {
+  if (window.groguCloud) {
+    openDialog('Invite a team member', 'They will receive an email to set their own password.',
+      `<div class="form-grid"><label class="field full"><span>Full name *</span><input name="name" required maxlength="100" autocomplete="name"></label><label class="field full"><span>Email address *</span><input name="email" type="email" required maxlength="254" autocomplete="email"></label><label class="field full"><span>Access</span><select name="role"><option value="member">Member</option><option value="admin">Admin</option></select></label></div>`,
+      'Send invitation', async values => { await api('/api/users', { method: 'POST', body: values }); await team(); notify('Invitation sent.'); });
+    return;
+  }
   openDialog('Add a team member', 'Create an account for someone on your team.',
     `<div class="form-grid"><label class="field full"><span>Full name *</span><input name="name" required maxlength="100" autocomplete="name" placeholder="e.g. Alex Morgan"></label><label class="field full"><span>Email address *</span><input name="email" type="email" required maxlength="254" autocomplete="email" placeholder="alex@company.com"></label><label class="field full"><span>Temporary password *</span><input name="password" type="password" required minlength="10" maxlength="200" autocomplete="new-password" placeholder="At least 10 characters"></label><label class="field full"><span>Access</span><select name="role"><option value="member">Member</option><option value="admin">Admin</option></select></label><p class="help-text field full">Share the credentials securely. Admins can add and remove members; all members can manage checklists.</p></div>`,
     'Add member', async values => {
@@ -227,7 +249,7 @@ app.addEventListener('click', async event => {
         }
         break;
       case 'delete-user': {
-        const user = state.users.find(member => member.id === Number(button.dataset.id));
+        const user = state.users.find(member => String(member.id) === button.dataset.id);
         if (user && confirm(`Remove ${user.name}? Their account and project assignments will be removed.`)) {
           await api(`/api/users/${user.id}`, { method: 'DELETE' });
           await team();
@@ -241,6 +263,8 @@ app.addEventListener('click', async event => {
 async function init() {
   try {
     const result = await api('/api/session');
+    state.setupKeyRequired = result.setupKeyRequired;
+    if (result.invitation) return invitation();
     if (!result.user) return auth(result.needsSetup);
     state.user = result.user;
     await dashboard();

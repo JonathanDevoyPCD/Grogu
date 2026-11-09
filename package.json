@@ -5,7 +5,14 @@
   "description": "A shared website go-live checklist portal",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "build:cloud": "vite build --config cloud/vite.config.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.95.3"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1"
   },
   "engines": {
     "node": ">=22.13.0"
